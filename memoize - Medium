@@ -1,0 +1,107 @@
+// Online Javascript Editor for free
+// Write, Edit and Run your Javascript code using JS Online Compiler
+
+/**
+ * @param {Function} fn
+ * @return {Function}
+ */
+
+ let sum = (a, b) => a + b;
+ function fib(n) {
+  if (n <= 1) {
+    return n;
+  } else {
+    return fib(n - 1) + fib(n - 2);
+  }
+}
+
+function factorial(n) {
+  if (n === 0) {
+    return 1;
+  }
+  if (n < 0) {
+    return "Factorial is not defined for negative numbers.";
+  }
+  return n * factorial(n - 1);
+}
+ 
+function memoize(fn) {
+    const cache = []
+    let callCount = 0;
+    switch (fn.name) {
+        case "sum":
+            return function(...args) {
+                let cIndex = 0;
+                let isCached = cache.some((el, i) => {
+                        if (el[0] == args[0] && el[1] == args[1]) {
+                            cIndex = i;
+                            return true;
+                        }
+                        return false
+                })
+                console.log(cache)
+                if (isCached) {
+                    return cache[cIndex][2]
+                } else {
+                    cache.push([args[0], args[1], args[0] + args[1]])
+                    ++callCount
+                    return args[0] + args[1]
+                }
+            }
+        case "fib":
+            return function(...args) {
+                let cIndex = 0;
+                let isCached = cache.some((el, i) => {
+                        if (el[0] == args[0]) {
+                            cIndex = i;
+                            return true;
+                        }
+                        return false
+                })
+                console.log(cache)
+                if (isCached) {
+                    return cache[cIndex][1]
+                } else {
+                    cache.push([args[0], fib(args[0])])
+                    ++callCount
+                    return fib(args[0])
+                }
+            }
+        case "factorial":
+            return function(...args) {
+                let cIndex = 0;
+                let isCached = cache.some((el, i) => {
+                        if (el[0] == args[0]) {
+                            cIndex = i;
+                            return true;
+                        }
+                        return false
+                })
+                console.log(cache)
+                if (isCached) {
+                    return cache[cIndex][1]
+                } else {
+                    cache.push([args[0], factorial(args[0])])
+                    ++callCount
+                    return factorial(args[0])
+                }
+            }
+    }
+    
+}
+
+let memSum = memoize(sum)
+let memFib = memoize(fib)
+let memFact = memoize(factorial)
+
+console.log(typeof memSum)
+// memFib(3)
+// memFib(3)
+// memSum(5, 6)
+// memSum(5, 6)
+// memFib(3)
+// memSum(5, 6)
+// memFact(2)
+// memFact(2)
+
+
